@@ -1,0 +1,6 @@
+size_class,min_m2,max_m2
+very small,0,30
+small,30,80
+medium,80,200
+large,200,1000
+very large,1000,∞

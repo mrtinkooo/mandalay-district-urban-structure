@@ -1,0 +1,59 @@
+{
+  "buildings": {
+    "feature_count": 286818,
+    "crs": "EPSG:4326",
+    "geom_types": {
+      "Polygon": 286818
+    },
+    "columns": [
+      "source",
+      "id",
+      "region",
+      "geometry"
+    ],
+    "source_counts": {
+      "ms": 158957,
+      "osm": 127861
+    },
+    "null_geoms": 0,
+    "invalid_geoms": 0,
+    "duplicate_id_source": 0,
+    "bbox_4326": [
+      95.9842835,
+      21.774367448126807,
+      96.2608698,
+      22.1615334
+    ]
+  },
+  "townships": {
+    "admin3_total_features": 330,
+    "mandalay_townships": 7,
+    "township_names": [
+      "Aungmyaythazan",
+      "Chanayethazan",
+      "Mahaaungmyay",
+      "Chanmyathazi",
+      "Pyigyitagon",
+      "Amarapura",
+      "Patheingyi"
+    ],
+    "township_pcodes": [
+      "MMR010001",
+      "MMR010002",
+      "MMR010003",
+      "MMR010004",
+      "MMR010005",
+      "MMR010006",
+      "MMR010007"
+    ],
+    "attributes_source_area_sqkm": {
+      "Aungmyaythazan": 26.09703332,
+      "Chanayethazan": 11.78208223,
+      "Mahaaungmyay": 14.73302058,
+      "Chanmyathazi": 25.98928193,
+      "Pyigyitagon": 32.63120114,
+      "Amarapura": 208.7247097,
+      "Patheingyi": 591.84753382
+    }
+  }
+}

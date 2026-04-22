@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandalay District — Township-level Urban Structure</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Mandalay District — Township-level Urban Structure</h1>
+    <p class="lede">
+      An open, reproducible analysis of 286,818 building footprints
+      across the 7 townships of Mandalay District, Myanmar — derived
+      from the GlobalBuildingAtlas ODbL dataset.
+    </p>
+    <p class="meta">
+      Source code & data:
+      <a href="https://github.com/geonet-myanmar/mandalay-district-buildings">GitHub repository</a>
+      · Last updated: 2026-04-22
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="intro">
+  <h2>1. Introduction</h2>
+  <p>
+    Mandalay District is the urban core of central Myanmar. Its seven
+    townships span from the dense historic grid of Chanayethazan and
+    Mahaaungmyay, through the industrial suburbs of Chanmyathazi and
+    Pyigyitagon, out to the large, semi-rural townships of Amarapura and
+    Patheingyi. This project uses open building footprints to compare
+    the urban structure of these townships on a common basis.
+  </p>
+</section>
+
+<section id="data">
+  <h2>2. Data</h2>
+  <ul>
+    <li><b>Building footprints</b> — 286,818
+        polygons in Mandalay District, clipped from the
+        <a href="https://github.com/zhu-xlab/GlobalBuildingAtlas">GlobalBuildingAtlas</a>
+        ODbL tile <code>asiawest/e095_n25_e100_n20</code>. GBA merges
+        OpenStreetMap and Microsoft Building Footprints; every feature
+        carries a <code>source</code> attribute of <code>osm</code> or
+        <code>ms</code>.</li>
+    <li><b>Township boundaries (admin-3)</b> — from the MIMU/UN OCHA
+        Myanmar common operational datasets, filtered to the seven
+        townships with <code>adm2_pcode = MMR010D001</code>.</li>
+  </ul>
+  <p>
+    No attribute about building <i>use</i>, <i>height</i>, <i>age</i>,
+    or <i>occupancy</i> is available. All findings below are based purely
+    on the geometry (footprint polygons) and the administrative overlay.
+  </p>
+</section>
+
+<section id="method">
+  <h2>3. Methodology</h2>
+  <ol>
+    <li>Reproject buildings and townships to <b>EPSG:32646</b> (UTM 46N,
+        metres) — a single metric CRS used for every area, length, and
+        shape measurement.</li>
+    <li>For every footprint compute: area (m²), perimeter (m),
+        Polsby-Popper compactness, minimum-rotated-rectangle fill ratio,
+        and MRR elongation.</li>
+    <li>Assign each building to a township with a point-in-polygon test
+        on the footprint centroid; buildings whose centroid falls outside
+        every polygon (boundary slivers) are attached to the nearest
+        township by a nearest-neighbour fallback.</li>
+    <li>Aggregate to township level: counts, total built-up area,
+        density, built-up ratio, footprint-area summary statistics, mean
+        shape indices, and size-class shares.</li>
+    <li>Size classes: breaks at
+        <code>30 / 80 / 200 / 1000 m²</code> (very small / small / medium
+        / large / very large) — chosen from the empirical distribution
+        and common urban-morphology conventions.</li>
+  </ol>
+  <p>
+    Every step is a plain Python script under <code>scripts/</code>; the
+    full pipeline is reproducible from raw inputs with
+    <code>python run_all.py</code>.
+  </p>
+</section>
+
+<section id="findings">
+  <h2>4. Key findings</h2>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="k-num">7</div><div class="k-lbl">Townships</div></div>
+    <div class="kpi"><div class="k-num">286,818</div><div class="k-lbl">Building footprints</div></div>
+    <div class="kpi"><div class="k-num">913.5 km²</div><div class="k-lbl">District area</div></div>
+    <div class="kpi"><div class="k-num">26.17 km²</div><div class="k-lbl">Built-up area</div></div>
+    <div class="kpi"><div class="k-num">2.9%</div><div class="k-lbl">Built-up ratio (district)</div></div>
+    <div class="kpi"><div class="k-num">314</div><div class="k-lbl">Buildings / km²</div></div>
+  </div>
+
+  <p><b>Chanayethazan</b> is the most built-up township (built-up ratio ≈ 27.0%), while <b>Patheingyi</b> is the least (0.2%). The highest building density belongs to <b>Mahaaungmyay</b> (2,544 buildings per km²). The largest mean footprint — a proxy for the share of industrial, institutional or larger compound buildings — is found in <b>Chanayethazan</b> (mean 118 m²).</p>
+</section>
+
+<section id="maps">
+  <h2>5. Maps</h2>
+
+  <h3>5.1 Interactive choropleth</h3>
+  <p>Toggle layers to compare indicators; hover for full township stats.</p>
+  <iframe src="interactive/townships_choropleth.html" class="map-iframe" title="Interactive township choropleth"></iframe>
+
+  <h3>5.2 Building-density heatmap</h3>
+  <iframe src="interactive/building_heatmap.html" class="map-iframe" title="Building density heatmap"></iframe>
+
+  <h3>5.3 Static reference maps</h3>
+  <div class="map-grid">
+    <figure><img src="assets/img/01_choropleth_builtup_ratio.png" alt="Built-up ratio"><figcaption>Built-up ratio</figcaption></figure>
+    <figure><img src="assets/img/02_choropleth_building_density.png" alt="Building density"><figcaption>Building density</figcaption></figure>
+    <figure><img src="assets/img/03_choropleth_mean_area.png" alt="Mean footprint"><figcaption>Mean footprint (m²)</figcaption></figure>
+    <figure><img src="assets/img/06_choropleth_share_large.png" alt="Share ≥1000 m²"><figcaption>Share of large (≥1000 m²) footprints</figcaption></figure>
+    <figure><img src="assets/img/04_all_buildings.png" alt="All buildings"><figcaption>All 286 k footprints</figcaption></figure>
+    <figure><img src="assets/img/05_hexbin_density.png" alt="Hexbin density"><figcaption>Hex-bin density hotspots</figcaption></figure>
+  </div>
+</section>
+
+<section id="charts">
+  <h2>6. Charts</h2>
+  <div class="chart-grid">
+    <figure><img src="assets/img/01_histogram_footprint_area.png" alt="Footprint area histogram"></figure>
+    <figure><img src="assets/img/02_bar_building_count.png" alt="Building count by township"></figure>
+    <figure><img src="assets/img/03_bar_building_density.png" alt="Building density"></figure>
+    <figure><img src="assets/img/04_bar_builtup_ratio.png" alt="Built-up ratio"></figure>
+    <figure><img src="assets/img/05_bar_mean_median_area.png" alt="Mean vs median area"></figure>
+    <figure><img src="assets/img/06_boxplot_area_by_township.png" alt="Boxplot by township"></figure>
+    <figure><img src="assets/img/07_stacked_size_classes.png" alt="Size-class composition"></figure>
+    <figure><img src="assets/img/08_scatter_density_vs_meanarea.png" alt="Density vs mean area"></figure>
+  </div>
+</section>
+
+<section id="tables">
+  <h2>7. Tables</h2>
+  <h3>7.1 Township summary</h3>
+  <div class="scroll"><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Township</th>
+      <th>Area (km²)</th>
+      <th>Buildings</th>
+      <th>Built-up area (km²)</th>
+      <th>Built-up ratio</th>
+      <th>Density (/km²)</th>
+      <th>Mean footprint (m²)</th>
+      <th>Median footprint (m²)</th>
+      <th>Share ≥1000 m²</th>
+      <th>Mean compactness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Chanayethazan</td>
+      <td>11.80</td>
+      <td>26,973</td>
+      <td>3.192</td>
+      <td>27.0%</td>
+      <td>2,285</td>
+      <td>118</td>
+      <td>77</td>
+      <td>0.4%</td>
+      <td>0.715</td>
+    </tr>
+    <tr>
+      <td>Mahaaungmyay</td>
+      <td>14.76</td>
+      <td>37,540</td>
+      <td>3.630</td>
+      <td>24.6%</td>
+      <td>2,544</td>
+      <td>97</td>
+      <td>64</td>
+      <td>0.3%</td>
+      <td>0.717</td>
+    </tr>
+    <tr>
+      <td>Chanmyathazi</td>
+      <td>26.03</td>
+      <td>48,846</td>
+      <td>4.367</td>
+      <td>16.8%</td>
+      <td>1,876</td>
+      <td>89</td>
+      <td>56</td>
+      <td>0.3%</td>
+      <td>0.725</td>
+    </tr>
+    <tr>
+      <td>Pyigyitagon</td>
+      <td>32.69</td>
+      <td>53,841</td>
+      <td>5.483</td>
+      <td>16.8%</td>
+      <td>1,647</td>
+      <td>102</td>
+      <td>53</td>
+      <td>0.9%</td>
+      <td>0.736</td>
+    </tr>
+    <tr>
+      <td>Aungmyaythazan</td>
+      <td>26.14</td>
+      <td>46,920</td>
+      <td>4.167</td>
+      <td>15.9%</td>
+      <td>1,795</td>
+      <td>89</td>
+      <td>54</td>
+      <td>0.3%</td>
+      <td>0.725</td>
+    </tr>
+    <tr>
+      <td>Amarapura</td>
+      <td>209.09</td>
+      <td>56,168</td>
+      <td>4.138</td>
+      <td>2.0%</td>
+      <td>269</td>
+      <td>74</td>
+      <td>46</td>
+      <td>0.3%</td>
+      <td>0.747</td>
+    </tr>
+    <tr>
+      <td>Patheingyi</td>
+      <td>592.97</td>
+      <td>16,530</td>
+      <td>1.192</td>
+      <td>0.2%</td>
+      <td>28</td>
+      <td>72</td>
+      <td>47</td>
+      <td>0.2%</td>
+      <td>0.746</td>
+    </tr>
+  </tbody>
+</table></div>
+  <p><a href="../outputs/tables/township_summary.csv">Download CSV</a></p>
+
+  <h3>7.2 Size-class composition</h3>
+  <div class="scroll"><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Township</th>
+      <th>Total</th>
+      <th>very small</th>
+      <th>small</th>
+      <th>medium</th>
+      <th>large</th>
+      <th>very large</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Amarapura</td>
+      <td>56,168</td>
+      <td>14,856 (26.4%)</td>
+      <td>28,865 (51.4%)</td>
+      <td>9,826 (17.5%)</td>
+      <td>2,476 (4.4%)</td>
+      <td>145 (0.3%)</td>
+    </tr>
+    <tr>
+      <td>Aungmyaythazan</td>
+      <td>46,920</td>
+      <td>10,953 (23.3%)</td>
+      <td>21,039 (44.8%)</td>
+      <td>11,361 (24.2%)</td>
+      <td>3,404 (7.3%)</td>
+      <td>163 (0.3%)</td>
+    </tr>
+    <tr>
+      <td>Chanayethazan</td>
+      <td>26,973</td>
+      <td>3,070 (11.4%)</td>
+      <td>10,871 (40.3%)</td>
+      <td>9,785 (36.3%)</td>
+      <td>3,130 (11.6%)</td>
+      <td>117 (0.4%)</td>
+    </tr>
+    <tr>
+      <td>Chanmyathazi</td>
+      <td>48,846</td>
+      <td>10,006 (20.5%)</td>
+      <td>22,529 (46.1%)</td>
+      <td>12,897 (26.4%)</td>
+      <td>3,276 (6.7%)</td>
+      <td>138 (0.3%)</td>
+    </tr>
+    <tr>
+      <td>Mahaaungmyay</td>
+      <td>37,540</td>
+      <td>6,576 (17.5%)</td>
+      <td>16,114 (42.9%)</td>
+      <td>11,528 (30.7%)</td>
+      <td>3,207 (8.5%)</td>
+      <td>115 (0.3%)</td>
+    </tr>
+    <tr>
+      <td>Patheingyi</td>
+      <td>16,530</td>
+      <td>4,207 (25.5%)</td>
+      <td>8,989 (54.4%)</td>
+      <td>2,759 (16.7%)</td>
+      <td>534 (3.2%)</td>
+      <td>41 (0.2%)</td>
+    </tr>
+    <tr>
+      <td>Pyigyitagon</td>
+      <td>53,841</td>
+      <td>12,225 (22.7%)</td>
+      <td>25,035 (46.5%)</td>
+      <td>12,144 (22.6%)</td>
+      <td>3,965 (7.4%)</td>
+      <td>472 (0.9%)</td>
+    </tr>
+  </tbody>
+</table></div>
+  <p><a href="../outputs/tables/township_size_classes.csv">Download CSV</a></p>
+
+  <h3>7.3 Size-class definitions</h3>
+  <div class="scroll"><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Size class</th>
+      <th>Min (m²)</th>
+      <th>Max (m²)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>very small</td>
+      <td>0</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <td>small</td>
+      <td>30</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <td>medium</td>
+      <td>80</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>large</td>
+      <td>200</td>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <td>very large</td>
+      <td>1000</td>
+      <td>∞</td>
+    </tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="limits">
+  <h2>8. Limitations</h2>
+  <ul>
+    <li><b>Footprint completeness varies by source.</b> Microsoft and OSM
+        coverage is not uniform; some very small huts may be missed and
+        some large compounds drawn as one polygon.</li>
+    <li><b>No semantic attributes.</b> Use, height, and population are
+        not in the dataset; size-class labels are shape-based proxies,
+        not land-use classes.</li>
+    <li><b>Centroid-based join.</b> A building split by a township
+        boundary is assigned to whichever township contains its centroid
+        (or, for slivers, the nearest polygon). Area double-counting is
+        avoided but boundary-straddling buildings may be mis-attributed.</li>
+    <li><b>Township <code>area_sqkm</code></b> recomputed in EPSG:32646;
+        differs from the MIMU-published value by &lt; 0.5%.</li>
+  </ul>
+</section>
+
+<section id="reproduce">
+  <h2>9. Reproducibility</h2>
+  <pre><code>git clone https://github.com/geonet-myanmar/mandalay-district-buildings
+cd mandalay-district-buildings
+pip install -r requirements.txt
+python run_all.py          # full pipeline, writes outputs/ and docs/</code></pre>
+  <p>
+    The raw <code>clip_mandalay.py</code> step (building extraction from
+    the 630 MB GBA tile) is included for completeness; the pipeline below
+    starts from the already-clipped <code>data_raw/</code> files.
+  </p>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Code: MIT · Data: ODbL 1.0 (© OSM contributors · Microsoft Building Footprints · MIMU/UN OCHA)</p>
+  </div>
+</footer>
+
+</main>
+</body>
+</html>

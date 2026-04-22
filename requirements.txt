@@ -1,0 +1,19 @@
+# Core geospatial stack
+geopandas>=1.0
+pyogrio>=0.9
+shapely>=2.0
+pyproj>=3.6
+
+# Analysis & IO
+pandas>=2.0
+numpy>=1.26
+pyarrow>=14         # parquet writer used by geopandas.to_parquet
+
+# Maps, charts, classification
+matplotlib>=3.8
+mapclassify>=2.6    # required for scheme="NaturalBreaks" choropleths
+contextily>=1.6     # optional basemaps (only used if you add them)
+folium>=0.15        # interactive leaflet maps
+
+# Templating for the static site
+jinja2>=3.1

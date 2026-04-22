@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# Unzipped admin layers (rebuilt from data_raw/mmr_admin_boundaries.geojson.zip)
+data_processed/mmr_admin0.geojson
+data_processed/mmr_admin1.geojson
+data_processed/mmr_admin2.geojson
+data_processed/mmr_admin3.geojson
+data_processed/mmr_admin4.geojson
+data_processed/mmr_admin5.geojson
+data_processed/mmr_adminlines.geojson
+data_processed/mmr_adminpoints.geojson
+
+# Uncompressed building output (shipped as .gz)
+data_raw/mandalay_district_buildings.geojson
+
+# Local GBA tile cache (630 MB, recreated on demand by clip_mandalay.py)
+/tmp/gba_*.geojson
